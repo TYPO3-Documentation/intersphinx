@@ -1,15 +1,19 @@
 {
     "name": "t3docs/intersphinx",
     "description": "Intersphinx extension for the doctrine rst parser",
-    "keywords": ["rst", "restructuredtext"],
-    "homepage": "https://github.com/TYPO3-Documentation/intersphinx",
     "license": "MIT",
+    "keywords": [
+        "rst",
+        "restructuredtext"
+    ],
+    "homepage": "https://github.com/TYPO3-Documentation/intersphinx",
     "require": {
         "php": "^7.4 || ^8.0",
         "doctrine/rst-parser": "^0.6@dev"
     },
     "require-dev": {
         "doctrine/coding-standard": "^10.0",
+        "ergebnis/composer-normalize": "^2.29",
         "gajus/dindent": "^2.0.2",
         "phpstan/phpstan": "^1.9",
         "phpstan/phpstan-deprecation-rules": "^1.0",
@@ -31,7 +35,8 @@
     },
     "config": {
         "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "ergebnis/composer-normalize": true
         },
         "sort-packages": true
     }

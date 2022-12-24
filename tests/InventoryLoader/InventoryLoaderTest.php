@@ -7,9 +7,9 @@ namespace T3Docs\Tests\Intersphinx\InventoryLoader;
 use PHPUnit\Framework\TestCase;
 use T3Docs\Intersphinx\Service\InventoryLoader;
 
+use function count;
 use function file_get_contents;
 use function PHPUnit\Framework\assertIsString;
-use function sizeof;
 
 final class InventoryLoaderTest extends TestCase
 {
@@ -26,7 +26,7 @@ final class InventoryLoaderTest extends TestCase
         assertIsString($jsonString);
         $this->inventoryLoader->loadInventoryFromString('somekey', $jsonString);
         $inventory = $this->inventoryLoader->getInventory('somekey');
-        self::assertGreaterThan(1, sizeof($inventory->getGroups()));
+        self::assertGreaterThan(1, count($inventory->getGroups()));
     }
 
     public function testInventoryTitleGetsHtmlspecialChared(): void
