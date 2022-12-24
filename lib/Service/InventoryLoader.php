@@ -14,6 +14,8 @@ use function file_get_contents;
 use function json_decode;
 use function print_r;
 
+use const JSON_THROW_ON_ERROR;
+
 final class InventoryLoader
 {
     private static ?InventoryLoader $myself = null;
@@ -31,7 +33,7 @@ final class InventoryLoader
 
     public function loadInventoryFromString(string $key, string $jsonString): void
     {
-        $json = json_decode($jsonString, true);
+        $json = json_decode($jsonString, true, 512, JSON_THROW_ON_ERROR);
         print_r($json);
         $this->inventories[$key] = new Inventory();
         foreach ($json as $groupKey => $groupArray) {
