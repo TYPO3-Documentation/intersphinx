@@ -6,7 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.4 || ^8.0",
-        "doctrine/rst-parser": "^0.6 || @dev"
+        "doctrine/rst-parser": "^0.6@dev"
     },
     "require-dev": {
         "doctrine/coding-standard": "^10.0",
