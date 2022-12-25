@@ -33,7 +33,7 @@ final class InventoryLoader
     public function loadInventoryFromString(string $key, string $jsonString): void
     {
         $json                    = json_decode($jsonString, true, 512, JSON_THROW_ON_ERROR);
-        $this->inventories[$key] = new Inventory();
+        $this->inventories[$key] = new Inventory('https://example.com/');
         foreach ($json as $groupKey => $groupArray) {
             $group = new InventoryGroup();
             foreach ($groupArray as $linkKey => $linkArray) {
