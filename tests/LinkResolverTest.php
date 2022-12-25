@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace T3Docs\Tests\Intersphinx;
+
 use Doctrine\RST\ErrorManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
