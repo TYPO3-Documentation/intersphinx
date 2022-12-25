@@ -11,7 +11,7 @@ use T3Docs\Intersphinx\Repository\InventoryRepository;
 use function explode;
 use function substr_count;
 
-final class LinkResolver
+class LinkResolver
 {
     private InventoryRepository $inventoryRepository;
     private ErrorManager $errorManager;

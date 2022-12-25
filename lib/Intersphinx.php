@@ -9,6 +9,7 @@ use Doctrine\RST\ErrorManager;
 use Doctrine\RST\Event\MissingReferenceResolverEvent;
 use T3Docs\Intersphinx\Listener\MissingReferenceResolverListener;
 use T3Docs\Intersphinx\Repository\InventoryRepository;
+use T3Docs\Intersphinx\Service\LinkResolver;
 
 class Intersphinx
 {
@@ -23,7 +24,7 @@ class Intersphinx
         $eventManager        = $this->configuration->getEventManager();
         $eventManager->addEventListener(
             [MissingReferenceResolverEvent::MISSING_REFERENCE_RESOLVER],
-            new MissingReferenceResolverListener()
+            new MissingReferenceResolverListener(new LinkResolver($inventoryRepository, $this->errorManager))
         );
         $this->inventoryRepository = $inventoryRepository;
     }
