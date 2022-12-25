@@ -7,26 +7,25 @@ namespace T3Docs\Tests\Intersphinx;
 use Doctrine\RST\ErrorManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use T3Docs\Intersphinx\Intersphinx;
 use T3Docs\Intersphinx\Model\Inventory;
 use T3Docs\Intersphinx\Model\InventoryGroup;
 use T3Docs\Intersphinx\Model\InventoryLink;
+use T3Docs\Intersphinx\Repository\InventoryRepository;
 use T3Docs\Intersphinx\Service\LinkResolver;
 
 class LinkResolverTest extends TestCase
 {
-    /** @var Intersphinx|MockObject */
-    private $intersphinx;
     /** @var ErrorManager|MockObject */
     private $errorManager;
+    /** @var InventoryRepository|MockObject */
+    private $inventoryRepository;
     private LinkResolver $linkResolver;
 
     protected function setUp(): void
     {
-        $this->intersphinx  = $this->createMock(Intersphinx::class);
-        $this->errorManager = $this->createMock(ErrorManager::class);
-        $this->intersphinx->method('getErrorManager')->willReturn($this->errorManager);
-        $this->linkResolver = new LinkResolver($this->intersphinx, []);
+        $this->errorManager        = $this->createMock(ErrorManager::class);
+        $this->inventoryRepository = $this->createMock(InventoryRepository::class);
+        $this->linkResolver        = new LinkResolver($this->inventoryRepository, $this->errorManager);
     }
 
     public function testInvalidLinkSyntaxSetsErrorReturnsNull(): void
@@ -38,6 +37,7 @@ class LinkResolverTest extends TestCase
 
     public function testInventoryNotFoundSetsWarningReturnsNull(): void
     {
+        $this->inventoryRepository->method('hasInventory')->willReturn(false);
         $this->errorManager->expects(self::atLeastOnce())->method('warning');
         $this->errorManager->expects(self::never())->method('error');
         $resolvedReference = $this->linkResolver->resolveLink('unknown:link');
@@ -46,33 +46,37 @@ class LinkResolverTest extends TestCase
 
     public function testLinkNotFoundSetsWarningReturnsNull(): void
     {
-        $linkResolverWithInventory = new LinkResolver($this->intersphinx, ['myinventory' => new Inventory('https://example.com/')]);
+        $this->inventoryRepository->method('hasInventory')->willReturn(true);
+        $this->inventoryRepository->method('getInventory')->willReturn(new Inventory('https://example.com/'));
         $this->errorManager->expects(self::atLeastOnce())->method('warning');
         $this->errorManager->expects(self::never())->method('error');
-        $resolvedReference = $linkResolverWithInventory->resolveLink('myinventory:unkownlink');
+        $resolvedReference = $this->linkResolver->resolveLink('myinventory:unkownlink');
         self::assertNull($resolvedReference);
     }
 
     public function testLinkExistsReturnsResolvedReference(): void
     {
-        $linkResolverWithInventory = new LinkResolver($this->intersphinx, ['myinventory' => $this->createFakeInventory()]);
+        $this->inventoryRepository->method('hasInventory')->willReturn(true);
+        $this->inventoryRepository->method('getInventory')->willReturn($this->createFakeInventory());
         $this->errorManager->expects(self::never())->method('warning');
         $this->errorManager->expects(self::never())->method('error');
-        $resolvedReference = $linkResolverWithInventory->resolveLink('myinventory:link');
+        $resolvedReference =  $this->linkResolver->resolveLink('myinventory:link');
         self::assertNotNull($resolvedReference);
     }
 
     public function testLinkInResolvedReference(): void
     {
-        $linkResolverWithInventory = new LinkResolver($this->intersphinx, ['myinventory' => $this->createFakeInventory()]);
-        $resolvedReference         = $linkResolverWithInventory->resolveLink('myinventory:link');
+        $this->inventoryRepository->method('hasInventory')->willReturn(true);
+        $this->inventoryRepository->method('getInventory')->willReturn($this->createFakeInventory());
+        $resolvedReference = $this->linkResolver->resolveLink('myinventory:link');
         self::assertEquals($resolvedReference->getUrl(), 'https://example.com/Index.html');
     }
 
     public function testLinkResolvalInMultipleGroups(): void
     {
-        $linkResolverWithInventory = new LinkResolver($this->intersphinx, ['myinventory' => $this->createFakeMultipleGroupInventory()]);
-        $resolvedReference         = $linkResolverWithInventory->resolveLink('myinventory:link');
+        $this->inventoryRepository->method('hasInventory')->willReturn(true);
+        $this->inventoryRepository->method('getInventory')->willReturn($this->createFakeMultipleGroupInventory());
+        $resolvedReference = $this->linkResolver->resolveLink('myinventory:link');
         self::assertEquals($resolvedReference->getUrl(), 'https://example.com/Index.html');
     }
 
