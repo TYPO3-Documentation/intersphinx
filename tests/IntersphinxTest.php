@@ -9,6 +9,7 @@ use Doctrine\RST\Configuration;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use T3Docs\Intersphinx\Intersphinx;
+use T3Docs\Intersphinx\Repository\InventoryRepository;
 
 class IntersphinxTest extends TestCase
 {
@@ -30,6 +31,6 @@ class IntersphinxTest extends TestCase
     {
         $this->eventManager->expects(self::atLeastOnce())
             ->method('addEventListener');
-        new Intersphinx($this->configuration);
+        new Intersphinx($this->configuration, new InventoryRepository([]));
     }
 }
