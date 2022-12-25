@@ -8,8 +8,8 @@ use RuntimeException;
 use T3Docs\Intersphinx\Model\Inventory;
 use T3Docs\Intersphinx\Model\InventoryGroup;
 use T3Docs\Intersphinx\Model\InventoryLink;
+use T3Docs\Intersphinx\Repository\InventoryRepository;
 
-use function array_key_exists;
 use function file_get_contents;
 use function json_decode;
 
@@ -17,23 +17,22 @@ use const JSON_THROW_ON_ERROR;
 
 final class InventoryLoader
 {
-    private static ?InventoryLoader $myself = null;
-    /** @var Inventory[] */
-    private array $inventories = [];
+    private InventoryRepository $inventoryRepository;
 
-    public static function getInventoryLoader(): InventoryLoader
+    public function __construct(?InventoryRepository $inventoryRepository = null)
     {
-        if (self::$myself === null) {
-            self::$myself = new InventoryLoader();
-        }
+        $this->inventoryRepository = $inventoryRepository ?? (new InventoryRepository([]));
+    }
 
-        return self::$myself;
+    public function getInventoryRepository(): InventoryRepository
+    {
+        return $this->inventoryRepository;
     }
 
     public function loadInventoryFromString(string $key, string $jsonString): void
     {
-        $json                    = json_decode($jsonString, true, 512, JSON_THROW_ON_ERROR);
-        $this->inventories[$key] = new Inventory('https://example.com/');
+        $json         = json_decode($jsonString, true, 512, JSON_THROW_ON_ERROR);
+        $newInventory = new Inventory('https://example.com/');
         foreach ($json as $groupKey => $groupArray) {
             $group = new InventoryGroup();
             foreach ($groupArray as $linkKey => $linkArray) {
@@ -41,8 +40,10 @@ final class InventoryLoader
                 $group->addLink($linkKey, $link);
             }
 
-            $this->inventories[$key]->addGroup($groupKey, $group);
+            $newInventory->addGroup($groupKey, $group);
         }
+
+        $this->inventoryRepository->addInventory($key, $newInventory);
     }
 
     public function loadInventoryFromUrl(string $key, string $url): void
@@ -53,14 +54,5 @@ final class InventoryLoader
         }
 
         $this->loadInventoryFromString($key, $jsonString);
-    }
-
-    public function getInventory(string $key): Inventory
-    {
-        if (! array_key_exists($key, $this->inventories)) {
-            throw new RuntimeException('Inventory with key ' . $key . ' not found. ', 1671398986);
-        }
-
-        return $this->inventories[$key];
     }
 }

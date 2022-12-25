@@ -17,7 +17,7 @@ final class InventoryLoaderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->inventoryLoader = InventoryLoader::getInventoryLoader();
+        $this->inventoryLoader = new InventoryLoader();
     }
 
     public function testInventoryLoaderLoadsInventory(): void
@@ -25,7 +25,7 @@ final class InventoryLoaderTest extends TestCase
         $jsonString = file_get_contents(__DIR__ . '/input/objects.inv.json');
         assertIsString($jsonString);
         $this->inventoryLoader->loadInventoryFromString('somekey', $jsonString);
-        $inventory = $this->inventoryLoader->getInventory('somekey');
+        $inventory = $this->inventoryLoader->getInventoryRepository()->getInventory('somekey');
         self::assertGreaterThan(1, count($inventory->getGroups()));
     }
 
@@ -34,7 +34,7 @@ final class InventoryLoaderTest extends TestCase
         $jsonString = file_get_contents(__DIR__ . '/input/objects.inv.json');
         assertIsString($jsonString);
         $this->inventoryLoader->loadInventoryFromString('somekey', $jsonString);
-        $inventory = $this->inventoryLoader->getInventory('somekey');
+        $inventory = $this->inventoryLoader->getInventoryRepository()->getInventory('somekey');
         $link      = $inventory->getLink('std:doc', 'Index');
         self::assertEquals($link->getTitle(), '&lt;project&gt;');
     }
