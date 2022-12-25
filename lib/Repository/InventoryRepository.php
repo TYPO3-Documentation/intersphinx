@@ -9,7 +9,7 @@ use T3Docs\Intersphinx\Model\Inventory;
 
 use function array_key_exists;
 
-final class InventoryRepository
+class InventoryRepository
 {
     /** @var array<String, Inventory> */
     private array $inventories;
