@@ -12,6 +12,18 @@ final class Inventory
 {
     /** @var InventoryGroup[]  */
     private array $groups = [];
+    private string $baseUrl;
+
+    /** @param String $baseUrl */
+    public function __construct(string $baseUrl)
+    {
+        $this->baseUrl = $baseUrl;
+    }
+
+    public function getBaseUrl(): string
+    {
+        return $this->baseUrl;
+    }
 
     public function addGroup(string $key, InventoryGroup $group): void
     {

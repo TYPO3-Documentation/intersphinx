@@ -18,6 +18,11 @@ final class InventoryGroup
         $this->links[$key] = $link;
     }
 
+    public function hasLink(string $key): bool
+    {
+        return array_key_exists($key, $this->links);
+    }
+
     public function getLink(string $key): InventoryLink
     {
         if (! array_key_exists($key, $this->links)) {
