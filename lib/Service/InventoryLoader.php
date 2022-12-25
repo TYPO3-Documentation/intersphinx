@@ -12,7 +12,6 @@ use T3Docs\Intersphinx\Model\InventoryLink;
 use function array_key_exists;
 use function file_get_contents;
 use function json_decode;
-use function print_r;
 
 use const JSON_THROW_ON_ERROR;
 
@@ -33,8 +32,7 @@ final class InventoryLoader
 
     public function loadInventoryFromString(string $key, string $jsonString): void
     {
-        $json = json_decode($jsonString, true, 512, JSON_THROW_ON_ERROR);
-        print_r($json);
+        $json                    = json_decode($jsonString, true, 512, JSON_THROW_ON_ERROR);
         $this->inventories[$key] = new Inventory();
         foreach ($json as $groupKey => $groupArray) {
             $group = new InventoryGroup();
