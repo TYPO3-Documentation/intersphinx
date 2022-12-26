@@ -8,6 +8,7 @@ use RuntimeException;
 use T3Docs\Intersphinx\Model\Inventory;
 
 use function array_key_exists;
+use function strtolower;
 
 class InventoryRepository
 {
@@ -22,20 +23,24 @@ class InventoryRepository
 
     public function hasInventory(string $key): bool
     {
-        return array_key_exists($key, $this->inventories);
+        $lowerCaseKey = strtolower($key);
+
+        return array_key_exists($lowerCaseKey, $this->inventories);
     }
 
     public function getInventory(string $key): Inventory
     {
-        if (! $this->hasInventory($key)) {
-            throw new RuntimeException('Inventory with key ' . $key . ' not found. ', 1671398986);
+        $lowerCaseKey = strtolower($key);
+        if (! $this->hasInventory($lowerCaseKey)) {
+            throw new RuntimeException('Inventory with key ' . $lowerCaseKey . ' not found. ', 1671398986);
         }
 
-        return $this->inventories[$key];
+        return $this->inventories[$lowerCaseKey];
     }
 
     public function addInventory(string $key, Inventory $inventory): void
     {
-        $this->inventories[$key] = $inventory;
+        $lowerCaseKey                     = strtolower($key);
+        $this->inventories[$lowerCaseKey] = $inventory;
     }
 }
