@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace T3Docs\Tests\Intersphinx\InventoryLoader;
 
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
+use T3Docs\Intersphinx\Exception\InvalidInventoryLink;
 use T3Docs\Intersphinx\Model\InventoryLink;
 
 final class InventoryLinkTest extends TestCase
@@ -31,24 +31,38 @@ final class InventoryLinkTest extends TestCase
         self::assertEquals($inventoryLink->getPath(), $link);
     }
 
+    public function testHtmlLinkWithPathAndSpecialSignsInAnchor(): void
+    {
+        $link          = 'WritingReST/Reference/Code/Phpdomain.html#TYPO3\CMS\Core\Context\ContextAwareTrait::$context';
+        $inventoryLink = new InventoryLink('', '', $link, '');
+        self::assertEquals($inventoryLink->getPath(), $link);
+    }
+
+    public function testLinkMayContaintDot(): void
+    {
+        $link          = 'WritingReST/Reference/Code/3.14/Phpdomain.html';
+        $inventoryLink = new InventoryLink('', '', $link, '');
+        self::assertEquals($inventoryLink->getPath(), $link);
+    }
+
     public function testPhpLinkThrowsError(): void
     {
         $link = 'Some/Path/SomeThing.php#anchor';
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidInventoryLink::class);
         new InventoryLink('', '', $link, '');
     }
 
     public function testJavaScriptLinkThrowsError(): void
     {
         $link = 'javascript:alert()';
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidInventoryLink::class);
         new InventoryLink('', '', $link, '');
     }
 
     public function testUrlLinkThrowsError(): void
     {
         $link = 'https://example.com';
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidInventoryLink::class);
         new InventoryLink('', '', $link, '');
     }
 }
