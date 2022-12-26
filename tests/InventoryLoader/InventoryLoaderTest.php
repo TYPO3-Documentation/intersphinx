@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace T3Docs\Tests\Intersphinx\InventoryLoader;
 
-use Doctrine\RST\ErrorManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use T3Docs\Intersphinx\Service\InventoryLoader;
-
 use T3Docs\Intersphinx\Service\JsonLoader;
+
 use function count;
 use function file_get_contents;
 use function json_decode;
@@ -21,15 +20,13 @@ final class InventoryLoaderTest extends TestCase
 {
     private InventoryLoader $inventoryLoader;
     /** @var JsonLoader|MockObject */
-    private JsonLoader $jsonLoader;
-    /**
-     * @var array<string, mixed>
-     */
+    private $jsonLoader;
+    /** @var array<string, mixed> */
     private array $json;
 
     protected function setUp(): void
     {
-        $this->jsonLoader        = $this->createMock(JsonLoader::class);
+        $this->jsonLoader      = $this->createMock(JsonLoader::class);
         $this->inventoryLoader = new InventoryLoader();
         $jsonString            = file_get_contents(__DIR__ . '/input/objects.inv.json');
         assertIsString($jsonString);
