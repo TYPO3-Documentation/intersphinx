@@ -13,11 +13,16 @@ final class InventoryLoader
 {
     private InventoryRepository $inventoryRepository;
     private JsonLoader $jsonLoader;
+    private string $pathToJson;
 
-    public function __construct(?InventoryRepository $inventoryRepository = null, ?JsonLoader $jsonLoader = null)
-    {
+    public function __construct(
+        ?InventoryRepository $inventoryRepository = null,
+        ?JsonLoader $jsonLoader = null,
+        string $pathToJson = 'objects.inv.json'
+    ) {
         $this->inventoryRepository = $inventoryRepository ?? (new InventoryRepository([]));
         $this->jsonLoader          = $jsonLoader ?? (new JsonLoader());
+        $this->pathToJson          = $pathToJson;
     }
 
     public function getInventoryRepository(): InventoryRepository
@@ -44,7 +49,7 @@ final class InventoryLoader
 
     public function loadInventoryFromUrl(string $key, string $url): void
     {
-        $json = $this->jsonLoader->loadJsonFromUrl($url);
+        $json = $this->jsonLoader->loadJsonFromUrl($url . $this->pathToJson);
 
         $this->loadInventoryFromJson($key, $url, $json);
     }
