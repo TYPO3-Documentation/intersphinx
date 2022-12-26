@@ -9,6 +9,7 @@ use Doctrine\RST\ErrorManager;
 use Doctrine\RST\Event\MissingReferenceResolverEvent;
 use T3Docs\Intersphinx\Listener\MissingReferenceResolverListener;
 use T3Docs\Intersphinx\Repository\InventoryRepository;
+use T3Docs\Intersphinx\Service\InventoryLoader;
 use T3Docs\Intersphinx\Service\LinkResolver;
 
 class Intersphinx
@@ -16,6 +17,22 @@ class Intersphinx
     private Configuration $configuration;
     private ErrorManager $errorManager;
     private InventoryRepository $inventoryRepository;
+
+    public static function getIntersphinxFromInventoryRepository(Configuration $configuration, InventoryRepository $inventoryRepository): Intersphinx
+    {
+        return new Intersphinx($configuration, $inventoryRepository);
+    }
+
+    /** @param array<String, String> $urls */
+    public static function getIntersphinxFromUrlArray(Configuration $configuration, array $urls): Intersphinx
+    {
+        $inventoryLoader = new InventoryLoader();
+        foreach ($urls as $key => $url) {
+            $inventoryLoader->loadInventoryFromUrl($key, $url);
+        }
+
+        return new Intersphinx($configuration, $inventoryLoader->getInventoryRepository());
+    }
 
     public function __construct(Configuration $configuration, InventoryRepository $inventoryRepository)
     {
