@@ -7,6 +7,7 @@ namespace T3Docs\Intersphinx\Model;
 use RuntimeException;
 
 use function array_key_exists;
+use function strtolower;
 
 final class InventoryGroup
 {
@@ -15,20 +16,24 @@ final class InventoryGroup
 
     public function addLink(string $key, InventoryLink $link): void
     {
-        $this->links[$key] = $link;
+        $lowerCaseKey               = strtolower($key);
+        $this->links[$lowerCaseKey] = $link;
     }
 
     public function hasLink(string $key): bool
     {
-        return array_key_exists($key, $this->links);
+        $lowerCaseKey = strtolower($key);
+
+        return array_key_exists($lowerCaseKey, $this->links);
     }
 
     public function getLink(string $key): InventoryLink
     {
-        if (! array_key_exists($key, $this->links)) {
-            throw new RuntimeException('Inventory link with key ' . $key . ' not found. ', 1671398986);
+        $lowerCaseKey = strtolower($key);
+        if (! array_key_exists($lowerCaseKey, $this->links)) {
+            throw new RuntimeException('Inventory link with key ' . $lowerCaseKey . ' not found. ', 1671398986);
         }
 
-        return $this->links[$key];
+        return $this->links[$lowerCaseKey];
     }
 }

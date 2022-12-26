@@ -54,4 +54,18 @@ final class InventoryLoaderTest extends TestCase
         $inventory = $inventoryLoader->getInventoryRepository()->getInventory('somekey');
         self::assertGreaterThan(1, count($inventory->getGroups()));
     }
+
+    public function testInventoryLoaderGetInventoryIsCaseInsensitive(): void
+    {
+        $inventory = $this->inventoryLoader->getInventoryRepository()->getInventory('SomeKey');
+        self::assertGreaterThan(1, count($inventory->getGroups()));
+    }
+
+    public function testInventoryKeyIsCaseInsensitive(): void
+    {
+        $inventoryLoaderWithCamelCaseKey = new InventoryLoader();
+        $inventoryLoaderWithCamelCaseKey->loadInventoryFromJson('CamelCaseKey', 'https://example.com/', $this->json);
+        $inventory = $inventoryLoaderWithCamelCaseKey->getInventoryRepository()->getInventory('camelcasekey');
+        self::assertGreaterThan(1, count($inventory->getGroups()));
+    }
 }

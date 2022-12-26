@@ -72,6 +72,24 @@ class LinkResolverTest extends TestCase
         self::assertEquals($resolvedReference->getUrl(), 'https://example.com/Index.html');
     }
 
+    public function testLinkInResolvedReferenceIgnoresCamelCase(): void
+    {
+        $this->inventoryRepository->method('hasInventory')->willReturn(true);
+        $this->inventoryRepository->method('getInventory')->willReturn($this->createCamelCaseFakeInventory());
+        $resolvedReference = $this->linkResolver->resolveLink('myinventory:camelcaselink');
+        self::assertNotNull($resolvedReference);
+    }
+
+    public function testResolveLinkIgnoresCamelCase(): void
+    {
+        $this->inventoryRepository->method('hasInventory')->willReturn(true);
+        $this->inventoryRepository->method('getInventory')->willReturn($this->createFakeInventory());
+        $this->errorManager->expects(self::never())->method('warning');
+        $this->errorManager->expects(self::never())->method('error');
+        $resolvedReference =  $this->linkResolver->resolveLink('MyyInventory:LiNk');
+        self::assertNotNull($resolvedReference);
+    }
+
     public function testLinkResolvalInMultipleGroups(): void
     {
         $this->inventoryRepository->method('hasInventory')->willReturn(true);
@@ -85,6 +103,17 @@ class LinkResolverTest extends TestCase
         $link  = new InventoryLink('<project>', '<version>', 'Index.html', 'Example');
         $group = new InventoryGroup();
         $group->addLink('link', $link);
+        $inventory = new Inventory('https://example.com/');
+        $inventory->addGroup('std:label', $group);
+
+        return $inventory;
+    }
+
+    private function createCamelCaseFakeInventory(): Inventory
+    {
+        $link  = new InventoryLink('<project>', '<version>', 'Index.html', 'Example');
+        $group = new InventoryGroup();
+        $group->addLink('CamelCaseLink', $link);
         $inventory = new Inventory('https://example.com/');
         $inventory->addGroup('std:label', $group);
 

@@ -7,6 +7,7 @@ namespace T3Docs\Intersphinx\Model;
 use RuntimeException;
 
 use function array_key_exists;
+use function strtolower;
 
 final class Inventory
 {
@@ -27,6 +28,7 @@ final class Inventory
 
     public function addGroup(string $key, InventoryGroup $group): void
     {
+        $lowerCaseKey       = strtolower($key);
         $this->groups[$key] = $group;
     }
 
@@ -38,15 +40,26 @@ final class Inventory
 
     public function getInventory(string $key): InventoryGroup
     {
-        if (! array_key_exists($key, $this->groups)) {
-            throw new RuntimeException('Inventory group with key ' . $key . ' not found. ', 1671398986);
+        $lowerCaseKey = strtolower($key);
+        if (! $this->hasInventoryGroup($lowerCaseKey)) {
+            throw new RuntimeException(
+                'Inventory group with key ' . $lowerCaseKey . ' not found. ',
+                1671398986
+            );
         }
 
-        return $this->groups[$key];
+        return $this->groups[$lowerCaseKey];
     }
 
     public function getLink(string $group, string $key): InventoryLink
     {
         return $this->getInventory($group)->getLink($key);
+    }
+
+    public function hasInventoryGroup(string $key): bool
+    {
+        $lowerCaseKey = strtolower($key);
+
+        return array_key_exists($lowerCaseKey, $this->groups);
     }
 }
