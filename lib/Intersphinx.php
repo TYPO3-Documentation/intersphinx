@@ -23,15 +23,14 @@ class Intersphinx
         return new Intersphinx($configuration, $inventoryRepository);
     }
 
-    /**
-     * @param array<String, String> $urls
-     */
+    /** @param array<String, String> $urls */
     public static function getIntersphinxFromUrlArray(Configuration $configuration, array $urls): Intersphinx
     {
         $inventoryLoader = new InventoryLoader();
         foreach ($urls as $key => $url) {
             $inventoryLoader->loadInventoryFromUrl($key, $url);
         }
+
         return new Intersphinx($configuration, $inventoryLoader->getInventoryRepository());
     }
 
