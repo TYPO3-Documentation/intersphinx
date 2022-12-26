@@ -49,7 +49,7 @@ final class InventoryLoaderTest extends TestCase
     public function testLoadInventoryFromUrl(): void
     {
         $inventoryLoader = new InventoryLoader(null, $this->jsonLoader);
-        $this->jsonLoader->expects(self::atLeastOnce())->method('')->willReturn($this->json);
+        $this->jsonLoader->expects(self::atLeastOnce())->method('loadJsonFromUrl')->willReturn($this->json);
         $inventoryLoader->loadInventoryFromUrl('somekey', 'https://example.com/');
         $inventory = $inventoryLoader->getInventoryRepository()->getInventory('somekey');
         self::assertGreaterThan(1, count($inventory->getGroups()));
