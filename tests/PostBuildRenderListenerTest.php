@@ -5,16 +5,11 @@ declare(strict_types=1);
 namespace T3Docs\Tests\Intersphinx;
 
 use Doctrine\RST\Builder;
-use Doctrine\RST\Environment;
-use Doctrine\RST\Event\MissingReferenceResolverEvent;
 use Doctrine\RST\Event\PostBuildRenderEvent;
-use Doctrine\RST\References\ResolvedReference;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use T3Docs\Intersphinx\Listener\MissingReferenceResolverListener;
 use T3Docs\Intersphinx\Listener\PostBuildRenderListener;
 use T3Docs\Intersphinx\Service\InventoryWriter;
-use T3Docs\Intersphinx\Service\LinkResolver;
 
 class PostBuildRenderListenerTest extends TestCase
 {
@@ -27,14 +22,14 @@ class PostBuildRenderListenerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->inventoryWriter  = $this->createMock(InventoryWriter::class);
-        $this->builder  = $this->createMock(Builder::class);
-        $this->listener     = new PostBuildRenderListener($this->inventoryWriter);
+        $this->inventoryWriter = $this->createMock(InventoryWriter::class);
+        $this->builder         = $this->createMock(Builder::class);
+        $this->listener        = new PostBuildRenderListener($this->inventoryWriter);
     }
 
     public function testDataWitOneColonSetsResolvedReference(): void
     {
-        $event             = new PostBuildRenderEvent(
+        $event = new PostBuildRenderEvent(
             $this->builder,
             'input',
             'output'
