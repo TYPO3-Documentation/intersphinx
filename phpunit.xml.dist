@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit bootstrap="./vendor/autoload.php" colors="true">
+
+    <extensions>
+        <extension class="T3Docs\Tests\Intersphinx\Hooks\BypassFinalHook"/>
+    </extensions>
     <testsuites>
         <testsuite name="Intersphinx Tests">
             <directory suffix="Test.php">./tests</directory>
