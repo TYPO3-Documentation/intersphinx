@@ -6,7 +6,6 @@ namespace T3Docs\Intersphinx\Listener;
 
 use Doctrine\RST\Event\PostBuildRenderEvent;
 use T3Docs\Intersphinx\Service\InventoryWriter;
-use T3Docs\Intersphinx\Service\JsonWriter;
 
 final class PostBuildRenderListener
 {
@@ -14,14 +13,13 @@ final class PostBuildRenderListener
 
     public function __construct(?InventoryWriter $inventoryWriter = null)
     {
-        $this->inventoryWriter = $inventoryWriter ?? (new InventoryWriter);
+        $this->inventoryWriter = $inventoryWriter ?? (new InventoryWriter());
     }
 
-    public function postBuildRender(PostBuildRenderEvent $event)
+    public function postBuildRender(PostBuildRenderEvent $event): void
     {
-        $metas = $event->getBuilder()->getMetas();
+        $metas    = $event->getBuilder()->getMetas();
         $filename = $event->getTargetDirectory() . '/objects.inv.json';
         $this->inventoryWriter->saveMetasToJson($metas, $filename);
-
     }
 }

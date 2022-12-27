@@ -32,7 +32,8 @@ class IntersphinxTest extends TestCase
     {
         $this->eventManager->expects(self::exactly(2))
             ->method('addEventListener')->withConsecutive(
-                [[MissingReferenceResolverEvent::MISSING_REFERENCE_RESOLVER]]);
+                [[MissingReferenceResolverEvent::MISSING_REFERENCE_RESOLVER]]
+            );
         new Intersphinx($this->configuration, new InventoryRepository([]));
     }
 }
