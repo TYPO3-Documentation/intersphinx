@@ -7,7 +7,9 @@ namespace T3Docs\Intersphinx;
 use Doctrine\RST\Configuration;
 use Doctrine\RST\ErrorManager;
 use Doctrine\RST\Event\MissingReferenceResolverEvent;
+use Doctrine\RST\Event\PostBuildRenderEvent;
 use T3Docs\Intersphinx\Listener\MissingReferenceResolverListener;
+use T3Docs\Intersphinx\Listener\PostBuildRenderListener;
 use T3Docs\Intersphinx\Repository\InventoryRepository;
 use T3Docs\Intersphinx\Service\InventoryLoader;
 use T3Docs\Intersphinx\Service\LinkResolver;
@@ -42,6 +44,10 @@ class Intersphinx
         $eventManager->addEventListener(
             [MissingReferenceResolverEvent::MISSING_REFERENCE_RESOLVER],
             new MissingReferenceResolverListener(new LinkResolver($inventoryRepository, $this->errorManager))
+        );
+        $eventManager->addEventListener(
+            [PostBuildRenderEvent::POST_BUILD_RENDER],
+            new PostBuildRenderListener()
         );
         $this->inventoryRepository = $inventoryRepository;
     }

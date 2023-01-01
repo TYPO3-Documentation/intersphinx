@@ -6,6 +6,7 @@ namespace T3Docs\Tests\Intersphinx;
 
 use Doctrine\Common\EventManager;
 use Doctrine\RST\Configuration;
+use Doctrine\RST\Event\MissingReferenceResolverEvent;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use T3Docs\Intersphinx\Intersphinx;
@@ -27,10 +28,12 @@ class IntersphinxTest extends TestCase
             ->willReturn($this->eventManager);
     }
 
-    public function testIntersphinxConstructorRegistersEvent(): void
+    public function testIntersphinxConstructorRegisters2Events(): void
     {
-        $this->eventManager->expects(self::atLeastOnce())
-            ->method('addEventListener');
+        $this->eventManager->expects(self::exactly(2))
+            ->method('addEventListener')->withConsecutive(
+                [[MissingReferenceResolverEvent::MISSING_REFERENCE_RESOLVER]]
+            );
         new Intersphinx($this->configuration, new InventoryRepository([]));
     }
 }

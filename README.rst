@@ -46,6 +46,8 @@ Now you can link to another manual in rst like this:
 
     Learn how to :ref:`Install TYPO3 with composer <t3start:composer>`!
 
+The links of the current document get written into `objects.inv.json` in the
+documentations main directory.
 
 Contribution
 ============
