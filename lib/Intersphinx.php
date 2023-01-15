@@ -39,7 +39,7 @@ class Intersphinx
     public function __construct(Configuration $configuration, InventoryRepository $inventoryRepository)
     {
         $this->configuration = $configuration;
-        $this->errorManager  = new ErrorManager($this->configuration);
+        $this->errorManager  = $this->configuration->getErrorManager();
         $eventManager        = $this->configuration->getEventManager();
         $eventManager->addEventListener(
             [MissingReferenceResolverEvent::MISSING_REFERENCE_RESOLVER],
@@ -50,11 +50,6 @@ class Intersphinx
             new PostBuildRenderListener()
         );
         $this->inventoryRepository = $inventoryRepository;
-    }
-
-    public function getErrorManager(): ErrorManager
-    {
-        return $this->errorManager;
     }
 
     public function getInventoryRepository(): InventoryRepository
